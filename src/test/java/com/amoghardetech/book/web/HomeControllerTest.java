@@ -26,7 +26,9 @@ class HomeControllerTest {
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("book(id: ID!): Book")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("createBook(input: BookInput!): Book!")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("updateBook(id: ID!, input: BookInput!): Book!")))
-				.andExpect(content().string(org.hamcrest.Matchers.containsString("deleteBook(id: ID!): Boolean!")));
+				.andExpect(content().string(org.hamcrest.Matchers.containsString("deleteBook(id: ID!): Boolean!")))
+				.andExpect(content().string(org.hamcrest.Matchers.containsString("This project is created by")))
+				.andExpect(content().string(org.hamcrest.Matchers.containsString("http://localhost:8080/amogh.gif")));
 	}
 
 }

@@ -26,11 +26,13 @@ public class HomeController {
 				  <meta name="viewport" content="width=device-width, initial-scale=1">
 				  <title>GraphQL Book API</title>
 				  <style>
-				    body { font-family: Georgia, serif; margin: 2rem auto; max-width: 42rem; line-height: 1.5; color: #1c1917; }
+				    body { font-family: Georgia, serif; margin: 2rem auto; max-width: 42rem; line-height: 1.5; color: #1c1917; background: #ffffff; }
 				    code, pre { font-family: ui-monospace, monospace; }
 				    code { background: #f5f5f4; padding: 0.1rem 0.3rem; }
 				    pre { background: #f5f5f4; padding: 0.8rem; overflow: auto; }
 				    a { color: #1d4ed8; }
+				    footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid #e7e5e4; display: flex; align-items: center; gap: 0.75rem; }
+				    footer img { height: 2.5rem; }
 				  </style>
 				</head>
 				<body>
@@ -61,13 +63,18 @@ public class HomeController {
 				{
 				  "query": "query { books { id title author price } }"
 				}</pre>
+				  <footer>
+				    <span>This project is created by</span>
+				    <img src="%s/amogh.gif" alt="Amogh">
+				  </footer>
 				</body>
 				</html>
 				""".formatted(
 				escape(homeUrl), escape(homeUrl),
 				escape(graphqlUrl),
 				escape(graphiqlUrl), escape(graphiqlUrl),
-				escape(graphqlUrl));
+				escape(graphqlUrl),
+				escape(baseUrl));
 	}
 
 	private static String escape(String value) {
