@@ -1,12 +1,13 @@
 # GraphQL Book API
 
-A Spring Boot GraphQL API for creating, viewing, updating, and deleting books.
+A Spring Boot API for creating, viewing, updating, and deleting books over GraphQL and MCP.
 
 ## Tech Stack
 
 - Java 21
 - Spring Boot
 - GraphQL
+- Spring AI 2.0 (MCP server and OpenAI)
 - PostgreSQL
 - JPA/Hibernate
 - Docker
@@ -17,15 +18,18 @@ A Spring Boot GraphQL API for creating, viewing, updating, and deleting books.
 - View books
 - Update books
 - Delete books
+- Expose the same operations as MCP tools
 
 ## Architecture
 
 ```
 Client
   ↓
-GraphQL
+GraphQL or MCP
   ↓
 Spring Boot
+  ↓
+BookService
   ↓
 JPA/Hibernate
   ↓
@@ -52,6 +56,20 @@ Start the API:
 ```
 
 GraphQL is available at `http://localhost:8080/graphql`. GraphiQL is available at `http://localhost:8080/graphiql`.
+
+The OpenAI starter reads the API key from `SPRING_AI_OPENAI_API_KEY` or `spring.ai.openai.api-key`.
+
+## MCP tools
+
+`BookTools` uses `BookService` and registers these tools with the Spring AI MCP server. The server starter is the STDIO transport, so an MCP client starts the application and talks to it over standard input and output.
+
+| Tool | Arguments | Result |
+|---|---|---|
+| `listBooks` | none | All books |
+| `getBook` | `id` | One book. Missing ids are reported as not found |
+| `createBook` | `title`, `author`, `price` | The created book |
+| `updateBook` | `id`, `title`, `author`, `price` | The updated book. Missing ids are reported as not found |
+| `deleteBook` | `id` | `true` when a book was deleted, `false` when the id is missing |
 
 ## GraphQL examples
 
