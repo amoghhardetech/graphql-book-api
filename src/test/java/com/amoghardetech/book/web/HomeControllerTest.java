@@ -20,6 +20,7 @@ class HomeControllerTest {
 		mockMvc.perform(get("/").header("Host", "localhost:8080"))
 				.andExpect(status().isOk())
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("http://localhost:8080/")))
+				.andExpect(content().string(org.hamcrest.Matchers.containsString("MCP support will be added soon")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("POST http://localhost:8080/graphql")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("http://localhost:8080/graphiql")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("books: [Book!]!")))
