@@ -38,6 +38,7 @@ public class HomeController {
 				<body>
 				  <h1>GraphQL Book API</h1>
 				  <p>The application is running.</p>
+				  <p>MCP support will be added soon.</p>
 				  <p>Home URL: <a href="%s">%s</a></p>
 				  <h2>Endpoints</h2>
 				  <ul>
