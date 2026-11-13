@@ -1,8 +1,7 @@
 # Render web service.
 # In the Render dashboard, set:
-#   SPRING_DATASOURCE_URL=jdbc:postgresql://<host>:5432/<database>
-#   SPRING_DATASOURCE_USERNAME=<database user>
-#   SPRING_DATASOURCE_PASSWORD=<database password>
+#   DATABASE_URL=postgres://<user>:<password>@<host>:5432/<database>
+#     Render's postgres:// URL is converted to jdbc:postgresql:// at startup.
 #   SPRING_AI_OPENAI_API_KEY=<key>   # required only when calling OpenAI
 # Render sets PORT (default 10000). The app listens on 0.0.0.0:$PORT.
 
