@@ -17,6 +17,7 @@ public class HomeController {
 		String baseUrl = homeUrl.endsWith("/") ? homeUrl.substring(0, homeUrl.length() - 1) : homeUrl;
 		String graphqlUrl = baseUrl + "/graphql";
 		String graphiqlUrl = baseUrl + "/graphiql";
+		String mcpUrl = baseUrl + "/mcp";
 
 		return """
 				<!DOCTYPE html>
@@ -38,12 +39,13 @@ public class HomeController {
 				<body>
 				  <h1>GraphQL Book API</h1>
 				  <p>The application is running.</p>
-				  <p>MCP support will be added soon.</p>
+				  <p>Claude and ChatGPT can connect to the MCP endpoint at <code>%s</code>.</p>
 				  <p>Home URL: <a href="%s">%s</a></p>
 				  <h2>Endpoints</h2>
 				  <ul>
 				    <li>GraphQL HTTP endpoint: <code>POST %s</code></li>
 				    <li>GraphiQL: <a href="%s">%s</a></li>
+				    <li>MCP Streamable HTTP: <code>%s</code></li>
 				  </ul>
 				  <h2>Queries</h2>
 				  <ul>
@@ -71,9 +73,11 @@ public class HomeController {
 				</body>
 				</html>
 				""".formatted(
+				escape(mcpUrl),
 				escape(homeUrl), escape(homeUrl),
 				escape(graphqlUrl),
 				escape(graphiqlUrl), escape(graphiqlUrl),
+				escape(mcpUrl),
 				escape(graphqlUrl),
 				escape(baseUrl));
 	}

@@ -23,3 +23,13 @@ spring:
   graphql:
     graphiql:
       enabled: true
+
+  ai:
+    mcp:
+      server:
+        protocol: STREAMABLE
+        name: book
+        version: 1.0.0
+        instructions: "Use these tools to list, get, create, update, and delete books. Call listBooks before updating or deleting so you have a real id."
+        streamable-http:
+          mcp-endpoint: /mcp
