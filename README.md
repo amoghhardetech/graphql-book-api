@@ -61,7 +61,7 @@ The OpenAI starter reads the API key from `SPRING_AI_OPENAI_API_KEY` or `spring.
 
 ## MCP tools
 
-`BookTools` uses `BookService` and registers these tools with the Spring AI MCP server. The server uses stateless Streamable HTTP, so each request stands alone and clients can list the tools without a session id.
+`BookTools` uses `BookService` and registers these tools with the Spring AI MCP server. The server uses stateless Streamable HTTP, so each request stands alone and clients can list the tools without a session id. `GET /mcp` with `Accept: text/event-stream` stays open as an event stream. Claude opens that stream before loading tools, and a 405 response makes Claude report that the tools could not be loaded.
 
 | Tool | Arguments | Result |
 |---|---|---|
