@@ -55,13 +55,13 @@ Start the API:
 ./gradlew bootRun
 ```
 
-GraphQL is available at `http://localhost:8080/graphql`. GraphiQL is available at `http://localhost:8080/graphiql`.
+GraphQL is available at `http://localhost:8080/graphql`. GraphiQL is available at `http://localhost:8080/graphiql`. The MCP server is available at `http://localhost:8080/mcp`.
 
-The OpenAI starter reads the API key from `SPRING_AI_OPENAI_API_KEY` or `spring.ai.openai.api-key`.
+The OpenAI starter reads the API key from `SPRING_AI_OPENAI_API_KEY` or `spring.ai.openai.api-key`. That key is only needed when this application calls OpenAI. Claude and ChatGPT do not use it when they call the book tools.
 
 ## MCP tools
 
-`BookTools` uses `BookService` and registers these tools with the Spring AI MCP server. The server starter is the STDIO transport, so an MCP client starts the application and talks to it over standard input and output.
+`BookTools` uses `BookService` and registers these tools with the Spring AI MCP server. The server uses the Streamable HTTP transport.
 
 | Tool | Arguments | Result |
 |---|---|---|
@@ -70,6 +70,31 @@ The OpenAI starter reads the API key from `SPRING_AI_OPENAI_API_KEY` or `spring.
 | `createBook` | `title`, `author`, `price` | The created book |
 | `updateBook` | `id`, `title`, `author`, `price` | The updated book. Missing ids are reported as not found |
 | `deleteBook` | `id` | `true` when a book was deleted, `false` when the id is missing |
+
+## Connect Claude or ChatGPT
+
+Deploy the application, then use the public HTTPS endpoint:
+
+`https://<your-service>.onrender.com/mcp`
+
+Wake a free Render service in a browser before connecting. The first request after sleep can time out while the JVM starts.
+
+### Claude
+
+Claude's free plan can add one custom connector.
+
+1. Open **Customize → Connectors → Add → Custom → Web**.
+2. Paste the `/mcp` URL.
+3. Choose **No sign in**.
+4. In a chat, open the **+** menu and turn the connector on.
+
+Claude can then list, get, create, update, and delete books. It asks before each tool call unless you set that tool to always allow.
+
+### ChatGPT
+
+ChatGPT web on Plus, Pro, Business, Enterprise, or Education can add the same URL as a custom MCP server. Turn on Developer mode, then open **Plugins → Add custom MCP server**, paste the `/mcp` URL, and choose **No authentication**.
+
+The `/mcp` endpoint has no login of its own. Anyone who knows the URL can call these tools, including `deleteBook`.
 
 ## GraphQL examples
 
