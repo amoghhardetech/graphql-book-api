@@ -1,3 +1,9 @@
+app:
+  public-url: http://localhost:8080
+  oauth:
+    username: book
+    password: change-me
+
 spring:
   ai:
     openai:

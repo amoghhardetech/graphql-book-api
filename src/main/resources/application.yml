@@ -33,3 +33,9 @@ spring:
         instructions: "Use these tools to list, get, create, update, and delete books. Call listBooks before updating or deleting so you have a real id."
         streamable-http:
           mcp-endpoint: /mcp
+
+app:
+  public-url: ${APP_PUBLIC_URL:http://localhost:8080}
+  oauth:
+    username: ${BOOK_USER:book}
+    password: ${BOOK_PASSWORD:change-me}

@@ -3,6 +3,9 @@
 #   DATABASE_URL=postgres://<user>:<password>@<host>:5432/<database>
 #     Render's postgres:// URL is converted to jdbc:postgresql:// at startup.
 #   SPRING_AI_OPENAI_API_KEY=<key>   # required only when calling OpenAI
+#   APP_PUBLIC_URL=https://<your-service>.onrender.com
+#   BOOK_USER=book
+#   BOOK_PASSWORD=<password>         # required for the Claude OAuth login
 # Render sets PORT (default 10000). The app listens on 0.0.0.0:$PORT.
 
 FROM eclipse-temurin:21-jdk AS build
