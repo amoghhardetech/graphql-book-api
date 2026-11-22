@@ -19,9 +19,11 @@ import jakarta.servlet.http.HttpServletResponse;
  * Claude opens {@code GET /mcp} to start an event stream before it loads tools.
  * The stateless MCP transport answers that GET with 405, and Claude treats the
  * 405 as a failed tool load. This filter keeps a quiet event stream open instead.
+ * It runs after Spring Security, so a request without a bearer token is rejected
+ * with 401 before this stream starts.
  */
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class McpEventStreamFilter extends OncePerRequestFilter {
 
 	@Override

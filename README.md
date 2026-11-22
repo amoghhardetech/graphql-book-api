@@ -11,6 +11,7 @@ A Spring Boot API for creating, viewing, updating, and deleting books over Graph
 - PostgreSQL
 - JPA/Hibernate
 - Docker
+- OAuth 2.1 for `/mcp` and `/graphql`
 
 ## Features
 
@@ -57,6 +58,8 @@ Start the API:
 
 GraphQL is available at `http://localhost:8080/graphql`. GraphiQL is available at `http://localhost:8080/graphiql`. The MCP server is available at `http://localhost:8080/mcp`.
 
+Local sign-in uses `book` / `change-me` unless you set `BOOK_USER` and `BOOK_PASSWORD`. Both `/graphql` and `/mcp` require that login. The home page does not.
+
 The OpenAI starter reads the API key from `SPRING_AI_OPENAI_API_KEY` or `spring.ai.openai.api-key`. That key is only needed when this application calls OpenAI. Claude and ChatGPT do not use it when they call the book tools.
 
 ## MCP tools
@@ -81,20 +84,42 @@ Wake a free Render service in a browser before connecting. The first request aft
 
 ### Claude
 
-Claude's free plan can add one custom connector.
+`/mcp` requires OAuth. Claude's free plan can add one custom connector.
+
+Set these on Render before connecting. `APP_PUBLIC_URL` must be the exact site origin, with no path and no trailing slash. Change `BOOK_PASSWORD` from the local default `change-me`.
+
+```text
+APP_PUBLIC_URL=https://<your-service>.onrender.com
+BOOK_USER=book
+BOOK_PASSWORD=<a password you choose>
+```
 
 1. Open **Customize → Connectors → Add → Custom → Web**.
 2. Paste the `/mcp` URL.
-3. Choose **No sign in**.
-4. In a chat, open the **+** menu and turn the connector on.
+3. Choose OAuth, then **Use your own OAuth client**.
+4. Enter client ID `claude` and leave the client secret empty. The redirect URI registered for that client is `https://claude.ai/api/mcp/auth_callback`.
+5. Sign in with `BOOK_USER` and `BOOK_PASSWORD`, then approve the `books` scope.
+6. In a chat, open the **+** menu and turn the connector on.
 
-Claude can then list, get, create, update, and delete books. It asks before each tool call unless you set that tool to always allow.
+Claude can then list, get, create, update, and delete books. It asks before each tool call unless you set that tool to always allow. A restart of the service creates a new signing key, so sign in again after a restart.
+
+### How a call is authenticated
+
+There is one user account and one OAuth client. You are the user. Claude is the client, with id `claude` and no client secret.
+
+1. Claude calls `/mcp` with no token. The server answers `401` and tells Claude where to send you.
+2. Your browser opens the login page. You enter `BOOK_USER` and `BOOK_PASSWORD`, then approve the `books` scope.
+3. The server gives Claude an access token that lasts 8 hours and a refresh token that lasts 30 days. You do not copy the token yourself.
+4. Each book operation is a new call to `/mcp` with `Authorization: Bearer <access token>`. The server checks the token's signature, issuer, and audience, then runs `listBooks`, `getBook`, `createBook`, `updateBook`, or `deleteBook`.
+5. The same token works for `POST /graphql`. Opening GraphiQL in a browser redirects to the same login page and then keeps a session cookie.
+
+The access token can be refreshed until the refresh token expires. After a restart, the signing key is new, so the old token is rejected and Claude must send you through login again.
 
 ### ChatGPT
 
-ChatGPT web on Plus, Pro, Business, Enterprise, or Education can add the same URL as a custom MCP server. Turn on Developer mode, then open **Plugins → Add custom MCP server**, paste the `/mcp` URL, and choose **No authentication**.
+`/mcp` and `/graphql` both reject calls that do not send a bearer token from this login. Opening GraphiQL in a browser redirects to the same sign-in page. The home page stays open.
 
-The `/mcp` endpoint has no login of its own. Anyone who knows the URL can call these tools, including `deleteBook`.
+ChatGPT cannot use **No authentication** anymore. The registered OAuth client only allows Claude's redirect URI, `https://claude.ai/api/mcp/auth_callback`.
 
 ## GraphQL examples
 
